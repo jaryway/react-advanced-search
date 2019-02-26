@@ -1,7 +1,7 @@
 import React from "react";
 import Loadable from "react-loadable";
-import PropTypes from "prop-types";
-import { combineReducers } from "redux";
+// import PropTypes from "prop-types";
+// import { combineReducers } from "redux";
 import { ReactReduxContext } from "react-redux";
 
 function counter1(state = 0, action) {

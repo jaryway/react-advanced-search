@@ -36,6 +36,25 @@
       text-align: right;
       background-color: #f4f4f4;
     }
+    &-select {
+      float: left;
+      width: auto;
+      margin: 3px 12px 3px 0;
+      min-width: 80px;
+      :global {
+        .ant-select-selection--single {
+          height: 23px;
+        }
+        .ant-select-selection__rendered {
+          line-height: 22px;
+          margin-left: 8px;
+          margin-right: 5px;
+        }
+        .ant-select-arrow {
+          right: 5px;
+        }
+      }
+    }
   }
 
   .param-list {

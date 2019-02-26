@@ -3,9 +3,16 @@ import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import moment from "moment";
-// import { Input } from "antd";
-import FilterItem from "./FilterItem";
+import DateRangeItem from "./DateRangeItem";
+import SearchItem from "./SearchItem";
+import { DATERANGE, SEARCH } from "./utils";
+
 import styles from "./style";
+
+const components = {
+  [DATERANGE]: DateRangeItem,
+  [SEARCH]: SearchItem
+};
 
 const data = [
   {
@@ -34,7 +41,7 @@ const data = [
     key: "2",
     type: "DATERANGE",
     label: "日期",
-    minDate: null,
+    // minDate: null,
     maxDate: moment(),
     options: [
       {
@@ -72,7 +79,29 @@ const data = [
       // { value: "6", label: "128GB及以上" }
     ],
     multiple: true
-  }
+  },
+  {
+    key: "3",
+    type: "NORMAL",
+    label: "状态",
+    options: [
+      { value: "128GB及以上", label: "128GB及以上" },
+      { value: "64GB", label: "64GB" },
+      { value: "32GB", label: "32GB" },
+      { value: "16GB", label: "16GB" },
+      { value: "8GB", label: "8GB" },
+      { value: "4GB", label: "4GB" },
+      { value: "2GB", label: "2GB" },
+      { value: "1GB", label: "1GB" },
+      { value: "1", label: "128GB及以上" },
+      { value: "2", label: "128GB及以上" },
+      { value: "3", label: "128GB及以上" },
+      { value: "4", label: "128GB及以上" },
+      { value: "5", label: "128GB及以上" },
+      { value: "6", label: "128GB及以上" }
+    ],
+    multiple: true
+  },
 ];
 
 export default class AdvancedFilter extends Component {
@@ -80,7 +109,14 @@ export default class AdvancedFilter extends Component {
     onChange: PropTypes.func
   };
 
-  state = { collapsed: {}, viewMoreVisible: {} };
+  state = {
+    collapsed: {},
+    viewMoreVisible: {},
+    value: {
+      "1": { selectedKeys: ["2GB"], extra: "ddsds" },
+      "2": { selectedKeys: [[moment()]], extra: "naqiDate" }
+    }
+  };
   elements = {};
 
   _onCollapsed = key => () => {
@@ -99,7 +135,7 @@ export default class AdvancedFilter extends Component {
 
   changeViewMoreVisible = () => {
     const items = Object.keys(this.elements);
-    // console.log("changeViewMoreVisible1", this.elements);
+
     if (!items.length) return;
 
     const viewMoreVisible = items.reduce((prev, current) => {
@@ -108,7 +144,6 @@ export default class AdvancedFilter extends Component {
       return { ...prev, [current]: height > 36 };
     }, {});
 
-    // console.log("changeViewMoreVisible", viewMoreVisible);
     this.setState({ viewMoreVisible });
   };
 
@@ -116,20 +151,32 @@ export default class AdvancedFilter extends Component {
     window.removeEventListener("resize", this.changeViewMoreVisible);
   }
 
+  _onItemChange = key => changedValue => {
+    console.log("item onchange", key, changedValue);
+    this.setState(prev => ({ value: { ...prev.value, [key]: changedValue } }));
+  };
+
   render() {
-    const { collapsed, viewMoreVisible } = this.state;
+    const { collapsed, viewMoreVisible, value } = this.state;
     return (
       <div className={classNames("advanced-filter", styles["advanced-filter"])}>
         {data.map(({ key, ...item }) => {
+          const ItemComponent = components[item.type] || null;
+
           return (
-            <FilterItem
-              key={key}
-              data={item}
-              collapsed={collapsed[key]}
-              viewMoreVisible={viewMoreVisible[key]}
-              onRef={el => (this.elements[key] = el)}
-              onCollapsed={this._onCollapsed(key)}
-            />
+            ItemComponent && (
+              <ItemComponent
+                key={key}
+                type={item.type}
+                data={item}
+                value={value[key]}
+                collapsed={collapsed[key]}
+                viewMoreVisible={viewMoreVisible[key]}
+                onRef={el => (this.elements[key] = el)}
+                onCollapsed={this._onCollapsed(key)}
+                onChange={this._onItemChange(key)}
+              />
+            )
           );
         })}
       </div>

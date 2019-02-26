@@ -4,12 +4,13 @@ import dynamic from "./utils/dynamic";
 import { Provider, ReactReduxContext } from "react-redux";
 // import { ReactReduxContext } from "react-redux";
 import { createStore, combineReducers } from "redux";
-import Test1 from "./Test1";
-import AdvancedFilter from "./AdvancedFilter";
+// import Test1 from "./Test1";
+import AdvancedSearch from "./AdvancedSearch";
 import "./App.css";
 import "antd/dist/antd.css";
+import PostList from "./post/PostList";
 // import Test from "./Test";
-const Test = dynamic(() => import("./Test"));
+// const Test = dynamic(() => import("./Test"));
 
 // const MyContext =React.createContext()
 
@@ -32,10 +33,10 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Test />
-        <Test1 />
-
-        <AdvancedFilter />
+        {/* <Test /> */}
+        {/* <Test1 /> */}
+        <PostList />
+        <AdvancedSearch />
       </Provider>
       // <div className="App">
       //   <header className="App-header">
