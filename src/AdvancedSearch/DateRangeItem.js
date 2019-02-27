@@ -2,15 +2,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-// import classNames from "classnames";
+
 import moment from "moment";
 import { DatePicker } from "antd";
 import { onItemClick, OPTION, CUSTOM } from "./utils";
 import Container from "./Container";
 import styles from "./style";
-
-// const OPTION = "OPTION"; // 选项模式
-// const CUSTOM = "CUSTOM"; // 自定义模式
 
 const getMinDate = (...rest) => {
   const dates = rest.filter(m => m);
@@ -55,10 +52,8 @@ class DateRangeItem extends Component {
   }
 
   _onDateChange = dateType => date => {
-    let {
-      mode,
-      selectedKeys: [[start, end] = []]
-    } = this.state;
+    const { mode, selectedKeys } = this.state;
+    let [[start, end] = []] = selectedKeys || [];
 
     start = dateType === "start" ? date : mode === CUSTOM ? start : undefined;
     end = dateType === "end" ? date : mode === CUSTOM ? end : undefined;
@@ -85,10 +80,9 @@ class DateRangeItem extends Component {
   };
 
   disabledStartDate = current => {
-    const {
-      mode,
-      selectedKeys: [[start, end] = []]
-    } = this.state;
+    const { mode, selectedKeys } = this.state;
+    const [[start, end] = []] = selectedKeys || [];
+
     const {
       data: { minDate = moment().add(-20, "days"), maxDate }
     } = this.props;
@@ -124,7 +118,7 @@ class DateRangeItem extends Component {
     if (minValue && maxDate)
       return current.valueOf() < minValue.valueOf() || current.valueOf() > maxDate.valueOf();
 
-    if (minValue) return current.valueOf() < minDate.valueOf();
+    if (minValue) return current.valueOf() < minValue.valueOf();
     if (maxDate) return current.valueOf() > maxDate.valueOf();
 
     return false;
