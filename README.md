@@ -2,4 +2,4 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Demo 截屏
 
-![demo application screenshot](docs/screenshot.png)
+![demo application screenshot](doc/screenshot.png)
