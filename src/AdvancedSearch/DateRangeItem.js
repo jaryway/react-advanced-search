@@ -102,10 +102,8 @@ class DateRangeItem extends Component {
   };
 
   disabledEndDate = current => {
-    const {
-      mode,
-      selectedKeys: [[start] = []]
-    } = this.state;
+    const { mode, selectedKeys } = this.state;
+    const [[start] = []] = selectedKeys || [];
     const {
       data: { minDate, maxDate }
     } = this.props;
