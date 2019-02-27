@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 // import classNames from "classnames";
 import moment from "moment";
 import { DatePicker } from "antd";
-import { DATERANGE, onItemClick, OPTION, CUSTOM } from "./utils";
+import { onItemClick, OPTION, CUSTOM } from "./utils";
 import Container from "./Container";
 import styles from "./style";
 
@@ -22,6 +22,7 @@ const getMaxDate = (...rest) => {
   if (!dates.length) return undefined;
   return moment.max(...dates);
 };
+
 class DateRangeItem extends Component {
   static propTypes = {
     onCollapsed: PropTypes.func,
@@ -32,17 +33,11 @@ class DateRangeItem extends Component {
     super(props);
     this.onItemClick = onItemClick.bind(this);
 
-    this.state =
-      "value" in this.props
-        ? { ...this.props.value }
-        : { selectedKeys: [], extra: "" };
+    this.state = {
+      mode: OPTION,
+      ...("value" in props ? props.value : { selectedKeys: [], extra: "" })
+    };
   }
-
-  state = {
-    selectedKeys: [],
-    extra: [],
-    mode: OPTION
-  };
 
   componentWillReceiveProps(nextProps) {
     const {
@@ -51,9 +46,7 @@ class DateRangeItem extends Component {
 
     if ("value" in nextProps) {
       const { value = {} } = nextProps;
-      const hintOptions = options.some(m =>
-        (value.selectedKeys || []).includes(m.value)
-      );
+      const hintOptions = options.some(m => (value.selectedKeys || []).includes(m.value));
       this.setState({
         ...nextProps.value,
         mode: hintOptions ? OPTION : CUSTOM
@@ -106,10 +99,7 @@ class DateRangeItem extends Component {
     if (!current) return false;
 
     if (minDate && maxValue)
-      return (
-        current.valueOf() < minDate.valueOf() ||
-        current.valueOf() > maxValue.valueOf()
-      );
+      return current.valueOf() < minDate.valueOf() || current.valueOf() > maxValue.valueOf();
 
     if (minDate) return current.valueOf() < minDate.valueOf();
     if (maxValue) return current.valueOf() > maxValue.valueOf();
@@ -132,10 +122,7 @@ class DateRangeItem extends Component {
     if (!current) return false;
 
     if (minValue && maxDate)
-      return (
-        current.valueOf() < minValue.valueOf() ||
-        current.valueOf() > maxDate.valueOf()
-      );
+      return current.valueOf() < minValue.valueOf() || current.valueOf() > maxDate.valueOf();
 
     if (minValue) return current.valueOf() < minDate.valueOf();
     if (maxDate) return current.valueOf() > maxDate.valueOf();
@@ -145,7 +132,7 @@ class DateRangeItem extends Component {
 
   render() {
     const { collapsed, viewMoreVisible, onRef, onCollapsed, data } = this.props;
-    const { label, options, multiple } = data || {};
+    const { label, options, multiple, dropDownData = [] } = data || {};
     const { selectedKeys = [], mode, extra } = this.state;
     const [[start, end] = []] = selectedKeys;
 
@@ -161,10 +148,7 @@ class DateRangeItem extends Component {
           viewMoreVisible,
           onRef,
           onCollapsed,
-          dropDownData: [
-            { value: "naqiDate", label: "到货纳期" },
-            { value: "kaoheDate", label: "考核时间" }
-          ],
+          dropDownData,
           dropDownValue: extra,
           onSelectChange: this._onSelectChange,
           onItemClick: this.onItemClick

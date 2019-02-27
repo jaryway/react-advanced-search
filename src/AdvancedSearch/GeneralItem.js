@@ -2,11 +2,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Input } from "antd";
+// import { Input } from "antd";
 import { onItemClick, OPTION, CUSTOM } from "./utils";
 import Container from "./Container";
 
-export default class DateRangeItem extends Component {
+export default class GeneralItem extends Component {
   static propTypes = {
     onCollapsed: PropTypes.func,
     onRef: PropTypes.func
@@ -16,30 +16,30 @@ export default class DateRangeItem extends Component {
     super(props);
     this.onItemClick = onItemClick.bind(this);
 
-    this.state =
-      "value" in this.props
-        ? { ...this.props.value }
-        : { selectedKeys: [], extra: "" };
+    this.state = {
+      // mode: OPTION,
+      ...("value" in props ? props.value : { selectedKeys: [], extra: "" })
+    };
   }
 
-  state = {
-    selectedKeys: [],
-    mode: OPTION
-  };
+  // state = {
+  //   selectedKeys: [],
+  //   mode: OPTION
+  // };
 
   componentWillReceiveProps(nextProps) {
-    const {
-      data: { options }
-    } = nextProps;
+    // const {
+    //   data: { options }
+    // } = nextProps;
 
     if ("value" in nextProps) {
-      const { value = {} } = nextProps;
-      const hintOptions = options.some(m =>
-        (value.selectedKeys || []).includes(m.value)
-      );
+      // const { value = {} } = nextProps;
+      // const hintOptions = options.some(m =>
+      //   (value.selectedKeys || []).includes(m.value)
+      // );
       this.setState({
         ...nextProps.value,
-        mode: hintOptions ? OPTION : CUSTOM
+        // mode: hintOptions ? OPTION : CUSTOM
       });
     }
   }
@@ -80,12 +80,7 @@ export default class DateRangeItem extends Component {
           onCollapsed,
           onItemClick: this.onItemClick
         }}
-      >
-        <Input.Search
-          onChange={this._onKeywordChange}
-          placeholder="请输入关键字"
-        />
-      </Container>
+      />
     );
   }
 }

@@ -1,123 +1,56 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { findDOMNode } from "react-dom";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import moment from "moment";
+// import moment from "moment";
 import DateRangeItem from "./DateRangeItem";
 import SearchItem from "./SearchItem";
-import { DATERANGE, SEARCH } from "./utils";
+import GeneralItem from "./GeneralItem";
+import { DATERANGE, SEARCH, GENERAL } from "./utils";
 
 import styles from "./style";
 
 const components = {
   [DATERANGE]: DateRangeItem,
-  [SEARCH]: SearchItem
+  [SEARCH]: SearchItem,
+  [GENERAL]: GeneralItem
 };
 
-const data = [
-  {
-    key: "1",
-    type: "SEARCH",
-    label: "品牌",
-    options: [
-      { value: "128GB及以上", label: "128GB及以上" },
-      { value: "64GB", label: "64GB" },
-      { value: "32GB", label: "32GB" },
-      { value: "16GB", label: "16GB" },
-      { value: "8GB", label: "8GB" },
-      { value: "4GB", label: "4GB" },
-      { value: "2GB", label: "2GB" },
-      { value: "1GB", label: "1GB" },
-      { value: "1", label: "128GB及以上" },
-      { value: "2", label: "128GB及以上" },
-      { value: "3", label: "128GB及以上" },
-      { value: "4", label: "128GB及以上" },
-      { value: "5", label: "128GB及以上" },
-      { value: "6", label: "128GB及以上" }
-    ],
-    multiple: true
-  },
-  {
-    key: "2",
-    type: "DATERANGE",
-    label: "日期",
-    // minDate: null,
-    maxDate: moment(),
-    options: [
-      {
-        value: [moment().startOf("week"), moment().endOf("week")],
-        label: "本周"
-      },
-      {
-        value: [moment().startOf("month"), moment().endOf("month")],
-        label: "本月"
-      },
-      {
-        value: [
-          moment()
-            .add(-1, "months")
-            .startOf("month"),
-          moment()
-            .add(-1, "months")
-            .endOf("month")
-        ],
-        label: "上个月"
-      },
-      {
-        value: [moment().startOf("year"), moment().endOf("year")],
-        label: "今年"
-      }
-      // { value: "", label: "8GB" },
-      // { value: "4GB", label: "4GB" },
-      // { value: "2GB", label: "2GB" },
-      // { value: "1GB", label: "1GB" },
-      // { value: "1", label: "128GB及以上" },
-      // { value: "2", label: "128GB及以上" },
-      // { value: "3", label: "128GB及以上" },
-      // { value: "4", label: "128GB及以上" },
-      // { value: "5", label: "128GB及以上" },
-      // { value: "6", label: "128GB及以上" }
-    ],
-    multiple: true
-  },
-  {
-    key: "3",
-    type: "NORMAL",
-    label: "状态",
-    options: [
-      { value: "128GB及以上", label: "128GB及以上" },
-      { value: "64GB", label: "64GB" },
-      { value: "32GB", label: "32GB" },
-      { value: "16GB", label: "16GB" },
-      { value: "8GB", label: "8GB" },
-      { value: "4GB", label: "4GB" },
-      { value: "2GB", label: "2GB" },
-      { value: "1GB", label: "1GB" },
-      { value: "1", label: "128GB及以上" },
-      { value: "2", label: "128GB及以上" },
-      { value: "3", label: "128GB及以上" },
-      { value: "4", label: "128GB及以上" },
-      { value: "5", label: "128GB及以上" },
-      { value: "6", label: "128GB及以上" }
-    ],
-    multiple: true
-  },
-];
-
-export default class AdvancedFilter extends Component {
+export default class AdvancedSearch extends PureComponent {
   static propTypes = {
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    dataSource: PropTypes.array,
+    value: PropTypes.object
   };
 
-  state = {
-    collapsed: {},
-    viewMoreVisible: {},
-    value: {
-      "1": { selectedKeys: ["2GB"], extra: "ddsds" },
-      "2": { selectedKeys: [[moment()]], extra: "naqiDate" }
-    }
-  };
   elements = {};
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapsed: {},
+      viewMoreVisible: {},
+      value: "value" in props ? props.value || {} : {}
+    };
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.changeViewMoreVisible);
+    setTimeout(() => this.changeViewMoreVisible());
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // const { value } = nextProps;
+
+    if ("value" in nextProps) {
+      const { value = {} } = nextProps;
+      this.setState({ value });
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.changeViewMoreVisible);
+  }
 
   _onCollapsed = key => () => {
     this.setState(prev => ({
@@ -127,11 +60,6 @@ export default class AdvancedFilter extends Component {
       }
     }));
   };
-
-  componentDidMount() {
-    window.addEventListener("resize", this.changeViewMoreVisible);
-    setTimeout(() => this.changeViewMoreVisible());
-  }
 
   changeViewMoreVisible = () => {
     const items = Object.keys(this.elements);
@@ -147,32 +75,44 @@ export default class AdvancedFilter extends Component {
     this.setState({ viewMoreVisible });
   };
 
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.changeViewMoreVisible);
-  }
-
   _onItemChange = key => changedValue => {
-    console.log("item onchange", key, changedValue);
-    this.setState(prev => ({ value: { ...prev.value, [key]: changedValue } }));
+    // console.log("item onchange", key, changedValue);
+    if (!("value" in this.props)) {
+      this.setState(prev => ({
+        value: { ...prev.value, [key]: changedValue }
+      }));
+    }
+    this.triggerChange({ [key]: changedValue });
+  };
+
+  triggerChange = changedValue => {
+    const { onChange } = this.props;
+    const { value } = this.state;
+
+    onChange && onChange({ ...value, ...changedValue });
   };
 
   render() {
-    const { collapsed, viewMoreVisible, value } = this.state;
+    const { dataSource } = this.props;
+    const { collapsed, viewMoreVisible, value = {} } = this.state;
+    // console.log("sdfsdf-sdf", value, collapsed);
     return (
-      <div className={classNames("advanced-filter", styles["advanced-filter"])}>
-        {data.map(({ key, ...item }) => {
+      <div className={classNames("advanced-search", styles["advanced-search"])}>
+        {(dataSource || []).map(({ key, ...item }) => {
           const ItemComponent = components[item.type] || null;
-
+          // console.log("key", key);
           return (
             ItemComponent && (
               <ItemComponent
                 key={key}
                 type={item.type}
                 data={item}
-                value={value[key]}
+                value={value[key] || {}}
                 collapsed={collapsed[key]}
                 viewMoreVisible={viewMoreVisible[key]}
-                onRef={el => (this.elements[key] = el)}
+                onRef={el => {
+                  this.elements[key] = el;
+                }}
                 onCollapsed={this._onCollapsed(key)}
                 onChange={this._onItemChange(key)}
               />

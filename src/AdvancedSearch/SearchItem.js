@@ -6,7 +6,7 @@ import { Input } from "antd";
 import { onItemClick, OPTION, CUSTOM } from "./utils";
 import Container from "./Container";
 
-export default class DateRangeItem extends Component {
+export default class SearchItem extends Component {
   static propTypes = {
     onCollapsed: PropTypes.func,
     onRef: PropTypes.func
@@ -16,36 +16,21 @@ export default class DateRangeItem extends Component {
     super(props);
     this.onItemClick = onItemClick.bind(this);
 
-    this.state =
-      "value" in this.props
-        ? { ...this.props.value }
-        : { selectedKeys: [], extra: [] };
+    this.state = {
+      ...("value" in props ? props.value : { selectedKeys: [], extra: "" })
+    };
   }
 
-  state = {
-    selectedKeys: [],
-    mode: OPTION
-  };
-
   componentWillReceiveProps(nextProps) {
-    const {
-      data: { options }
-    } = nextProps;
 
     if ("value" in nextProps) {
-      const { value = {} } = nextProps;
-      const hintOptions = options.some(m =>
-        (value.selectedKeys || []).includes(m.value)
-      );
       this.setState({
         ...nextProps.value,
-        mode: hintOptions ? OPTION : CUSTOM
       });
     }
   }
 
   _onKeywordChange = ({ target }) => {
-    // console.log(target.value);
 
     this.setState({
       ...("value" in this.props ? {} : { extra: target.value.trim() })

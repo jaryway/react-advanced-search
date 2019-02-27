@@ -1,1 +1,1 @@
-export { default } from "./index.module.scss";
+export { default } from "./index.module.less";

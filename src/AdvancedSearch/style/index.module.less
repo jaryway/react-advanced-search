@@ -1,0 +1,125 @@
+// @import "~antd/style/themes/default";
+.advanced-search {
+  // margin: 8px;
+  // margin-top: 80px;
+  .filter {
+    &-item {
+      position: relative;
+      height: 36px;
+      overflow: hidden;
+      // border-top: 1px dashed #e6e6e6;
+      padding: 0 66px 0 90px;
+      zoom: 1;
+      z-index: 5;
+      border: 1px solid #e8e8e8;
+      border-bottom-width: 0;
+      &:last-child {
+        border-bottom-width: 1px;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+      &:first-child {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      }
+    }
+    &-type {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 90px;
+      padding-top: 9px;
+      // height: 18px;
+      font: 12px/18px arial;
+      color: #666;
+      text-align: right;
+      background-color: #f4f4f4;
+    }
+    &-select {
+      float: left;
+      width: auto;
+      margin: 3px 12px 3px 0;
+      min-width: 80px;
+      :global {
+        .ant-select-selection--single {
+          height: 23px;
+        }
+        .ant-select-selection__rendered {
+          line-height: 22px;
+          margin-left: 8px;
+          margin-right: 5px;
+        }
+        .ant-select-arrow {
+          right: 5px;
+        }
+      }
+    }
+  }
+
+  .param-list {
+    padding: 3px 0 3px 8px;
+    position: relative;
+    zoom: 1;
+    overflow: hidden;
+    // *padding-bottom: 9px;
+
+    a {
+      float: left;
+      height: 18px;
+      line-height: 18px;
+      padding: 0 3px;
+      margin: 6px 12px 6px 0;
+      white-space: nowrap;
+      text-decoration: none;
+      color: rgba(0, 0, 0, 0.65);
+
+      &:hover,
+      &:global(.active) {
+        background-color: #2db7f5;
+        color: #fff;
+      }
+    }
+
+    .date-picker {
+      float: left;
+      width: 220px;
+      padding: 0 3px;
+      margin: 3px 12px 3px 0;
+      display: flex;
+      :global {
+        .ant-input {
+          height: auto;
+          padding: 0;
+          padding-left: 3px;
+        }
+      }
+    }
+
+    :global {
+      .ant-input-search {
+        float: left;
+        width: 120px;
+        padding: 0 3px;
+        margin: 3px 12px 3px 0;
+        .ant-input {
+          height: auto;
+          padding: 0;
+          padding-left: 3px;
+        }
+      }
+    }
+  }
+
+  .view-more {
+    // visibility: hidden;
+    position: absolute;
+    right: 15px;
+    top: 8px;
+    padding: 0 0 0 5px;
+    width: 40px;
+    height: 20px;
+    line-height: 20px;
+    color: #666;
+  }
+}

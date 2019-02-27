@@ -1,12 +1,15 @@
 export const SEARCH = "SEARCH";
 export const DATERANGE = "DATERANGE";
-export const DROPSEARCH = "DROPSEARCH";
+// export const DROPSEARCH = "DROPSEARCH";
+export const GENERAL = "GENERAL";
 export const OPTION = "OPTION"; // 选项模式
 export const CUSTOM = "CUSTOM"; // 自定义模式
 
 export function onItemClick(item) {
   return () => {
-    const { type, multiple } = this.props;
+    const {
+      data: { type, multiple }
+    } = this.props;
     const { value } = item;
     let { selectedKeys = [] } = this.state;
     // const { onChange } = this.props;
@@ -15,6 +18,7 @@ export function onItemClick(item) {
     if (selectedKeys.includes(value)) {
       selectedKeys = selectedKeys.filter(m => m !== value);
     } else {
+      // console.log("ssssdsdsdsd", multiple);
       selectedKeys =
         type !== DATERANGE && multiple ? [...selectedKeys, value] : [value];
     }
