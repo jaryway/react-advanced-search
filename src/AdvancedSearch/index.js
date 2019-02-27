@@ -93,11 +93,16 @@ export default class AdvancedSearch extends PureComponent {
   };
 
   render() {
-    const { dataSource } = this.props;
+    const { dataSource, style, className } = this.props;
     const { collapsed, viewMoreVisible, value = {} } = this.state;
+    const clsName = classNames(
+      "advanced-search",
+      styles["advanced-search"],
+      className
+    );
     // console.log("sdfsdf-sdf", value, collapsed);
     return (
-      <div className={classNames("advanced-search", styles["advanced-search"])}>
+      <div style={style} className={clsName}>
         {(dataSource || []).map(({ key, ...item }) => {
           const ItemComponent = components[item.type] || null;
           // console.log("key", key);
