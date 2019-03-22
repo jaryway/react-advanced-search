@@ -147,7 +147,9 @@ export const filter2value = filter => {
   if ("dateType" in filter || "beginTime" in filter || "endTime" in filter) {
     value.date = {
       extra: dateType,
-      selectedKeys: [[moment(beginTime), moment(endTime)]]
+      selectedKeys: [
+        [beginTime && moment(beginTime), endTime && moment(endTime)]
+      ]
     };
   }
 

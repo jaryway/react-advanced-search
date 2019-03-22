@@ -50,7 +50,9 @@ class DateRangeItem extends Component {
       const hintOptions = options.some(m => {
         return selectedKeys.some(selected => {
           // 此时每项是一个数组，要确保数组中的每一项都相等才返回true
-          return selected.every((v, i) => v.valueOf() === m.value[i].valueOf());
+          return selected.every(
+            (v, i) => v && v.valueOf() === m.value[i].valueOf()
+          );
         });
       });
       this.setState({
