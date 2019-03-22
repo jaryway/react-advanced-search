@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import moment from "moment";
-import AdvancedSearch from "./AdvancedSearch";
+import AdvancedSearch, { DATERANGE } from "./AdvancedSearch";
 import { dataSource, filter2value, value2filter } from "./utils";
 
 import "./App.css";
 import "antd/dist/antd.css";
-
+console.log(DATERANGE);
 class App extends Component {
   state = {
     filter: {

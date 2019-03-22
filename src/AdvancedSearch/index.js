@@ -6,10 +6,14 @@ import classNames from "classnames";
 import DateRangeItem from "./DateRangeItem";
 import SearchItem from "./SearchItem";
 import GeneralItem from "./GeneralItem";
-import { DATERANGE, SEARCH, GENERAL } from "./utils";
+import * as utils from "./utils";
 
 import styles from "./style";
 
+export const DATERANGE = utils.DATERANGE;
+export const SEARCH = utils.SEARCH;
+export const GENERAL = utils.GENERAL;
+// console.log(DATERANGE)
 const components = {
   [DATERANGE]: DateRangeItem,
   [SEARCH]: SearchItem,
