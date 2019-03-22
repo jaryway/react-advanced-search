@@ -43,7 +43,16 @@ class DateRangeItem extends Component {
 
     if ("value" in nextProps) {
       const { value = {} } = nextProps;
-      const hintOptions = options.some(m => (value.selectedKeys || []).includes(m.value));
+
+      const selectedKeys = value.selectedKeys || [];
+
+      // options 是否有值被选中
+      const hintOptions = options.some(m => {
+        return selectedKeys.some(selected => {
+          // 此时每项是一个数组，要确保数组中的每一项都相等才返回true
+          return selected.every((v, i) => v.valueOf() === m.value[i].valueOf());
+        });
+      });
       this.setState({
         ...nextProps.value,
         mode: hintOptions ? OPTION : CUSTOM
@@ -93,7 +102,10 @@ class DateRangeItem extends Component {
     if (!current) return false;
 
     if (minDate && maxValue)
-      return current.valueOf() < minDate.valueOf() || current.valueOf() > maxValue.valueOf();
+      return (
+        current.valueOf() < minDate.valueOf() ||
+        current.valueOf() > maxValue.valueOf()
+      );
 
     if (minDate) return current.valueOf() < minDate.valueOf();
     if (maxValue) return current.valueOf() > maxValue.valueOf();
@@ -114,7 +126,10 @@ class DateRangeItem extends Component {
     if (!current) return false;
 
     if (minValue && maxDate)
-      return current.valueOf() < minValue.valueOf() || current.valueOf() > maxDate.valueOf();
+      return (
+        current.valueOf() < minValue.valueOf() ||
+        current.valueOf() > maxDate.valueOf()
+      );
 
     if (minValue) return current.valueOf() < minValue.valueOf();
     if (maxDate) return current.valueOf() > maxDate.valueOf();
