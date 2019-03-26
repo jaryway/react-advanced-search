@@ -3,11 +3,12 @@
 onChange: 筛选条件改变时调用的方法，参数为当前已选择的筛选条件
 dataSource: 筛选字段的数据
 value: 筛选的值
+
 ---
 
 通用条件筛选组件
 
-````jsx
+```jsx
 import AdvancedSearch from '@/components/AdvancedSearch';
 
 const onChange = filters => console.log(filters);
@@ -18,6 +19,7 @@ const dataSource = [
     type: "SEARCH",
     label: "搜索",
     multiple: true,
+    // filterKeyNames:[""] filterKeyNames 为 filter 对应的值，type 为 SEARCH 时，默认为 ["queryType","queryValue"]
     options: [
       { label: "考核月份", value: "title" },
       { label: "设备名称", value: "num" },
@@ -30,6 +32,7 @@ const dataSource = [
     key: "date",
     type: "DATERANGE",
     label: "时间筛选",
+    // filterKeyNames:[""] filterKeyNames 为 filter 对应的值，type 为 DATERANGE 时，默认为 ["dateType","beginTime","endTime"]
     dropDownData: [
       { value: "naqiDate", label: "到货纳期0" },
       { value: "kaoheDate", label: "考核时间" }
@@ -77,7 +80,7 @@ const dataSource = [
         key: "thismonth",
         label: "本月",
         // 本月开始 ~ 当前日期
-        value: [moment().startOf("month"), moment().endOf("day")]
+        value: [moment().startOf("month"), moment().endOf("month")]
       },
       {
         key: "lastmonth",
@@ -95,7 +98,7 @@ const dataSource = [
         key: "thisquarter",
         label: "本季度",
         // 本月开始 ~ 当前日期
-        value: [moment().startOf("quarter"), moment().endOf("day")]
+        value: [moment().startOf("quarter"), moment().endOf("quarter")]
       },
       {
         key: "lastquarter",
@@ -112,7 +115,7 @@ const dataSource = [
       {
         key: "thisyear",
         label: "今年",
-        value: [moment().startOf("year"), moment().endOf("day")]
+        value: [moment().startOf("year"), moment().endOf("year")]
       }
     ]
   },
@@ -120,6 +123,7 @@ const dataSource = [
     key: "status",
     type: "GENERAL",
     label: "状态",
+    // filterKeyNames:[""] filterKeyNames 无效，此时 filterKeyName 取 key 的值
     multiple: true,
     options: [
       { value: "1", label: "已收到协议未订货" },
@@ -135,4 +139,4 @@ const dataSource = [
 ];
 
 ReactDOM.render(<AdvancedSearch dataSource={dataSource} onChange={onChange} />, mountNode);
-````
+```
