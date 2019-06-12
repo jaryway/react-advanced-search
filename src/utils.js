@@ -1,25 +1,11 @@
+import moment from "moment";
 
----
-onChange: 筛选条件改变时调用的方法，参数为当前已选择的筛选条件
-dataSource: 筛选字段的数据
-value: 筛选的值
-
----
-
-通用条件筛选组件
-
-```jsx
-import AdvancedSearch from '@/components/AdvancedSearch';
-
-const onChange = filters => console.log(filters);
-
-const dataSource = [
+export const dataSource = [
   {
     key: "keywords",
     type: "SEARCH",
     label: "搜索",
     multiple: true,
-    // filterKeyNames:[""] filterKeyNames 为 filter 对应的值，type 为 SEARCH 时，默认为 ["queryType","queryValue"]
     options: [
       { label: "考核月份", value: "title" },
       { label: "设备名称", value: "num" },
@@ -32,7 +18,6 @@ const dataSource = [
     key: "date",
     type: "DATERANGE",
     label: "时间筛选",
-    // filterKeyNames:[""] filterKeyNames 为 filter 对应的值，type 为 DATERANGE 时，默认为 ["dateType","beginTime","endTime"]
     dropDownData: [
       { value: "naqiDate", label: "到货纳期0" },
       { value: "kaoheDate", label: "考核时间" }
@@ -62,7 +47,7 @@ const dataSource = [
         key: "thisweek",
         label: "本周",
         // 本周开始 ~ 当前日期
-        value: [moment().startOf("week"), moment().endOf("day")]
+        value: [moment().startOf("week"), moment().endOf("week")]
       },
       {
         key: "lastweek",
@@ -123,7 +108,6 @@ const dataSource = [
     key: "status",
     type: "GENERAL",
     label: "状态",
-    // filterKeyNames:[""] filterKeyNames 无效，此时 filterKeyName 取 key 的值
     multiple: true,
     options: [
       { value: "1", label: "已收到协议未订货" },
@@ -138,5 +122,44 @@ const dataSource = [
   }
 ];
 
-ReactDOM.render(<AdvancedSearch dataSource={dataSource} onChange={onChange} />, mountNode);
-```
+// 将值转为 api 查询对象
+export const value2filter = value => {
+  const { extra: dateType, selectedKeys: [[beginTime, endTime] = []] = [] } =
+    "date" in value ? value.date : {};
+  const { extra: queryValue, selectedKeys: queryType } =
+    "keywords" in value ? value.keywords : {};
+  const { selectedKeys: [status] = [] } = "status" in value ? value.status : {};
+  return { dateType, beginTime, endTime, queryValue, queryType, status };
+};
+// 将查询对象转为值
+export const filter2value = filter => {
+  const {
+    dateType,
+    beginTime,
+    endTime,
+    queryValue,
+    queryType,
+    status
+  } = filter;
+
+  const value = {};
+
+  if ("dateType" in filter || "beginTime" in filter || "endTime" in filter) {
+    value.date = {
+      extra: dateType,
+      selectedKeys: [
+        [beginTime && moment(beginTime), endTime && moment(endTime)]
+      ]
+    };
+  }
+
+  if ("queryValue" in filter || "queryType" in filter) {
+    value.keywords = { extra: queryValue, selectedKeys: queryType };
+  }
+
+  if ("status" in filter) {
+    value.status = { selectedKeys: [status] };
+  }
+
+  return value;
+};

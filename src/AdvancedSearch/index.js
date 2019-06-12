@@ -6,9 +6,15 @@ import classNames from "classnames";
 import DateRangeItem from "./DateRangeItem";
 import SearchItem from "./SearchItem";
 import GeneralItem from "./GeneralItem";
-import { DATERANGE, SEARCH, GENERAL } from "./utils";
+import * as utils from "./utils";
 
 import styles from "./style";
+
+export const DATERANGE = utils.DATERANGE;
+export const SEARCH = utils.SEARCH;
+export const GENERAL = utils.GENERAL;
+export const value2filter = utils.value2filter;
+export const filter2value = utils.filter2value;
 
 const components = {
   [DATERANGE]: DateRangeItem,
@@ -20,7 +26,7 @@ export default class AdvancedSearch extends PureComponent {
   static propTypes = {
     onChange: PropTypes.func,
     dataSource: PropTypes.array,
-    value: PropTypes.object
+    value: PropTypes.object,
   };
 
   elements = {};
@@ -68,7 +74,7 @@ export default class AdvancedSearch extends PureComponent {
 
     const viewMoreVisible = items.reduce((prev, current) => {
       const element = this.elements[current];
-      const { height } = findDOMNode(element).getBoundingClientRect();
+      const { height } = !element ? { height: 0 } : findDOMNode(element).getBoundingClientRect();
       return { ...prev, [current]: height > 36 };
     }, {});
 
@@ -95,11 +101,7 @@ export default class AdvancedSearch extends PureComponent {
   render() {
     const { dataSource, style, className } = this.props;
     const { collapsed, viewMoreVisible, value = {} } = this.state;
-    const clsName = classNames(
-      "advanced-search",
-      styles["advanced-search"],
-      className
-    );
+    const clsName = classNames("advanced-search", styles["advanced-search"], className);
     // console.log("sdfsdf-sdf", value, collapsed);
     return (
       <div style={style} className={clsName}>
