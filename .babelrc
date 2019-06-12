@@ -1,0 +1,19 @@
+{
+  "presets": [
+    ["@babel/preset-env", {
+      "loose": true,
+      "modules": false,
+      "useBuiltIns":"usage",
+      "targets": {
+        "browsers": [
+          ">1%",
+          "last 4 versions",
+          "Firefox ESR",
+          "ie >= 9",
+          "iOS >= 8",
+          "Android >= 4"
+        ]
+      }
+    }]
+  ]
+}
